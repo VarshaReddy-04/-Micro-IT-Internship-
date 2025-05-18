@@ -1,0 +1,111 @@
+import tkinter as tk
+from tkinter import messagebox
+
+# Extended quiz list with more questions
+quiz = [
+    {
+        "question": "What is the capital of India?",
+        "options": ["New Delhi", "Mumbai", "Kolkata", "Chennai"],
+        "answer": "New Delhi"
+    },
+    {
+        "question": "Which language is primarily used for web development?",
+        "options": ["Python", "C++", "JavaScript", "Java"],
+        "answer": "JavaScript"
+    },
+    {
+        "question": "Which planet is known as the Red Planet?",
+        "options": ["Earth", "Mars", "Jupiter", "Venus"],
+        "answer": "Mars"
+    },
+    {
+        "question": "What does CPU stand for?",
+        "options": ["Central Processing Unit", "Computer Processing Unit", "Central Program Unit", "Control Processing Unit"],
+        "answer": "Central Processing Unit"
+    },
+    {
+        "question": "Who invented the telephone?",
+        "options": ["Alexander Graham Bell", "Thomas Edison", "Nikola Tesla", "Albert Einstein"],
+        "answer": "Alexander Graham Bell"
+    },
+    {
+        "question": "Which is the longest river in the world?",
+        "options": ["Amazon", "Ganga", "Nile", "Yangtze"],
+        "answer": "Nile"
+    },
+    {
+        "question": "HTML stands for?",
+        "options": ["HyperText Markup Language", "HighText Machine Language", "HyperTabular Markup Language", "None of these"],
+        "answer": "HyperText Markup Language"
+    },
+    {
+        "question": "Which year did World War II end?",
+        "options": ["1945", "1939", "1918", "1950"],
+        "answer": "1945"
+    },
+    {
+        "question": "Which programming language is known for data science?",
+        "options": ["Python", "C", "PHP", "Ruby"],
+        "answer": "Python"
+    },
+    {
+        "question": "Which is the smallest prime number?",
+        "options": ["0", "1", "2", "3"],
+        "answer": "2"
+    }
+]
+
+class QuizApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Quiz Game")
+        self.index = 0
+        self.score = 0
+        self.selected_option = tk.StringVar()
+
+        self.question_label = tk.Label(root, text="", font=("Arial", 16), wraplength=400)
+        self.question_label.pack(pady=20)
+
+        self.options = []
+        for _ in range(4):
+            btn = tk.Radiobutton(root, text="", variable=self.selected_option,
+                                 value="", font=("Arial", 12), anchor="w")
+            btn.pack(fill="x", padx=50, pady=2)
+            self.options.append(btn)
+
+        self.submit_btn = tk.Button(root, text="Submit", command=self.submit)
+        self.submit_btn.pack(pady=20)
+
+        self.display_question()
+
+    def display_question(self):
+        q = quiz[self.index]
+        self.question_label.config(text=f"Q{self.index+1}: {q['question']}")
+        self.selected_option.set(None)
+        for i, option in enumerate(q["options"]):
+            self.options[i].config(text=option, value=option)
+
+    def submit(self):
+        selected = self.selected_option.get()
+        if not selected:
+            messagebox.showwarning("Select an option", "Please select an option before submitting.")
+            return
+
+        correct_answer = quiz[self.index]['answer']
+        if selected == correct_answer:
+            self.score += 1
+
+        self.index += 1
+        if self.index < len(quiz):
+            self.display_question()
+        else:
+            self.show_result()
+
+    def show_result(self):
+        messagebox.showinfo("Quiz Completed", f"🎉 Your Score: {self.score} out of {len(quiz)}")
+        self.root.destroy()
+
+# Launch the quiz
+root = tk.Tk()
+app = QuizApp(root)
+root.mainloop()
